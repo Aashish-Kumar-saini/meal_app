@@ -5,18 +5,16 @@ import 'package:meals_app/screens/meals.dart';
 
 class CategoryGridItem extends StatelessWidget{
 
-const CategoryGridItem({super.key, required this.category});
+const CategoryGridItem({super.key, required this.category, required this.categoryTapped});
 final Category category;
+final void Function() categoryTapped;
 
 @override
   Widget build(BuildContext context) {
     // TODO: implement build
     return InkWell(
-        onTap: (){
-          Navigator.push(context,   MaterialPageRoute<void>(
-      builder: (BuildContext context) => MealsScreen(meals:dummyMeals , title: category.title),
-    ));
-        },
+        onTap: categoryTapped ,
+         
         splashColor: Theme.of(context).primaryColor,
         borderRadius: BorderRadius.circular(16),
       child: Container(
