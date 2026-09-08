@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:meals_app/main.dart';
 import 'package:meals_app/models/meal.dart';
 import 'package:meals_app/screens/meal_detail_screen.dart';
 import 'package:meals_app/widgets/meal_item.dart';
 
 class MealsScreen extends StatelessWidget{
-  const MealsScreen({super.key, required this.meals, required this.title});
+  const MealsScreen({super.key, required this.meals,  this.title, required this.onToggleFavorite});
 
 final List<Meal> meals ;
-final String title;
-
+final String? title;
+final void Function(Meal meal) onToggleFavorite;
 void onSelectMeal(BuildContext contx, Meal meal){
 
-  Navigator.of(contx).push(MaterialPageRoute(builder: (context)=> MealDetailScreen(meal: meal)));
+  Navigator.of(contx).push(MaterialPageRoute(builder: (context)=> MealDetailScreen(meal: meal, onToggleFavorite: onToggleFavorite,)));
 }
 
 @override
@@ -22,27 +21,6 @@ void onSelectMeal(BuildContext contx, Meal meal){
  onSelectMeal(context, meals[index]);
     } ,));
     
-    
-    //  Card(
-    //     child: Row(
-    //       children: [
-    //         Container(width: 20, decoration: BoxDecoration(borderRadius: BorderRadius.circular(50)), child: Text( "${index +1}")),
-    //         SizedBox(width: 20,),
-        
-    //         Column(
-    //           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-    //           children: [
-    //             Text(meals[index].title, style:Theme.of(context).textTheme.bodyLarge!.copyWith(
-    //               color: Theme.of(context).colorScheme.onSurface
-    //           ) ,),
-    //             Text(meals[index].isVegan? "vegan": meals[index].isVegetarian? "Veg": "non-veg", style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-    //               color: Theme.of(context).colorScheme.onSurface
-    //           ),)
-    //           ],
-    //         )
-    //       ],
-    //     ),
-    //   ));
 
       if(meals.isEmpty){
 
@@ -63,9 +41,13 @@ void onSelectMeal(BuildContext contx, Meal meal){
         );
 
       }
+
+      if(title == null){
+        return content;
+      }
     // TODO: implement build
     return Scaffold(
-      appBar: AppBar(title: Text(title),),
+      appBar: AppBar(title: Text(title!),),
       body: content
     );
   }
