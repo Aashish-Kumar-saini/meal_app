@@ -56,11 +56,42 @@ class MealDetailScreen extends ConsumerWidget {
           children: [
             Hero(
               tag: meal.id,
-              child: Image.network(
-                meal.imageUrl,
+              child: SizedBox(
                 height: 300,
                 width: double.infinity,
-                fit: .cover,
+                child: Image.network(
+                  meal.imageUrl,
+                  fit: BoxFit.cover,
+                  loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress == null) {
+                      return child;
+                    }
+
+                    return Container(
+                      color: Colors.grey.shade300.withAlpha(100),
+                      child: const Center(
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            Colors.white70,
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                  errorBuilder: (context, error, stackTrace) {
+                    return Container(
+                      color: Colors.grey.shade300.withAlpha(100),
+                      child: Center(
+                        child: Icon(
+                          Icons.image_not_supported_outlined,
+                          color: Colors.white.withAlpha(190),
+                          size: 40,
+                        ),
+                      ),
+                    );
+                  },
+                ),
               ),
             ),
             SizedBox(height: 10),

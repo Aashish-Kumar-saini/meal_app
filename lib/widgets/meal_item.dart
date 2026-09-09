@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:meals_app/models/meal.dart';
 import 'package:meals_app/widgets/meal_item_trait.dart';
-import 'package:transparent_image/transparent_image.dart';
 
 class MealItems extends StatelessWidget {
   const MealItems({super.key, required this.meal, required this.onSelectMeal});
@@ -30,12 +29,42 @@ class MealItems extends StatelessWidget {
           children: [
             Hero(
               tag: meal.id,
-              child: FadeInImage(
-                placeholder: MemoryImage(kTransparentImage),
-                image: NetworkImage(meal.imageUrl),
+              child: SizedBox(
                 height: 200,
                 width: double.infinity,
-                fit: .cover,
+                child: Image.network(
+                  meal.imageUrl,
+                  fit: BoxFit.cover,
+                  loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress == null) {
+                      return child;
+                    }
+
+                    return Container(
+                      color: Colors.grey.shade300.withAlpha(100),
+                      child: const Center(
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            Colors.white70,
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                  errorBuilder: (context, error, stackTrace) {
+                    return Container(
+                      color: Colors.grey.shade300.withAlpha(100),
+                      child: Center(
+                        child: Icon(
+                          Icons.image_not_supported_outlined,
+                          color: Colors.white.withAlpha(190),
+                          size: 36,
+                        ),
+                      ),
+                    );
+                  },
+                ),
               ),
             ),
             Positioned(
