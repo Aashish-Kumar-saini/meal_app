@@ -10,7 +10,6 @@ class MealDetailScreen extends ConsumerWidget {
   final Meal meal;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-
     final favoriteMeals = ref.watch(favoriteMealsProvider);
 
     final isFavorite = favoriteMeals.contains(meal);
@@ -25,21 +24,44 @@ class MealDetailScreen extends ConsumerWidget {
                   .read(favoriteMealsProvider.notifier)
                   .toggleFavoriteMealStatus(meal);
               ScaffoldMessenger.of(context).clearSnackBars();
-              ScaffoldMessenger.of(context)
-                  .showSnackBar(SnackBar(content: Text(isAdded? 'Meal added to favorites': 'Meal removed from favorites')));
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    isAdded
+                        ? 'Meal added to favorites'
+                        : 'Meal removed from favorites',
+                  ),
+                ),
+              );
             },
-            icon: Icon(isFavorite? Icons.star : Icons.star_border_outlined),
+            icon: AnimatedSwitcher(
+              duration: Duration(milliseconds: 800),
+              transitionBuilder: (child, animation) {
+                return RotationTransition(
+                  turns: Tween(begin: 0.5, end: 1.0).animate(animation),
+
+                  child: child,
+                );
+              },
+              child: Icon(
+                isFavorite ? Icons.star : Icons.star_border_outlined,
+                key: ValueKey(isFavorite),
+              ),
+            ),
           ),
         ],
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Image.network(
-              meal.imageUrl,
-              height: 300,
-              width: double.infinity,
-              fit: .cover,
+            Hero(
+              tag: meal.id,
+              child: Image.network(
+                meal.imageUrl,
+                height: 300,
+                width: double.infinity,
+                fit: .cover,
+              ),
             ),
             SizedBox(height: 10),
             Text(
