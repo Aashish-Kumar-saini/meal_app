@@ -6,35 +6,42 @@ import 'package:meals_app/screens/meals.dart';
 import 'package:meals_app/widgets/category_grid_item.dart';
 
 class CategoriesScreen extends StatelessWidget {
-  const CategoriesScreen({super.key, required this.onToggleFavorite, required this.availableMeals});
-  final void Function(Meal meal) onToggleFavorite;
+  const CategoriesScreen({super.key, required this.availableMeals});
+
   final List<Meal> availableMeals;
 
-  void _selectCategory(BuildContext context, Category category){
-   final fillterMeal =  availableMeals.where((meal)=> meal.categories.contains(category.id)).toList();
-    Navigator.of(context).push(MaterialPageRoute( builder: (context)=> MealsScreen(meals: fillterMeal, title: category.title, onToggleFavorite: onToggleFavorite,)));
-
+  void _selectCategory(BuildContext context, Category category) {
+    final fillterMeal = availableMeals
+        .where((meal) => meal.categories.contains(category.id))
+        .toList();
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => MealsScreen(
+          meals: fillterMeal,
+          title: category.title,
+        ),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     return GridView(
-        padding: EdgeInsets.all(24),
+      padding: EdgeInsets.all(24),
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
-        childAspectRatio: 3/2,
+        childAspectRatio: 3 / 2,
         crossAxisSpacing: 20,
-        mainAxisSpacing: 20
+        mainAxisSpacing: 20,
       ),
       children: [
-        for(final category in availableCategories)
-          CategoryGridItem(category: category, categoryTapped: ()=> _selectCategory(context, category))
-        
-      
+        for (final category in availableCategories)
+          CategoryGridItem(
+            category: category,
+            categoryTapped: () => _selectCategory(context, category),
+          ),
       ],
     );
-    
-    
- }
+  }
 }
